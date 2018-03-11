@@ -80,26 +80,29 @@ function FireAirstrike(lock,var)
 		Citizen.Wait(1000)
 		countdown = false
 		SetFocusArea(pos, 0, 0, 0)
-		local model = GetHashKey("prop_ld_bomb_01")
 		local ped = GetPlayerPed(-1)
 		local veh = GetVehiclePedIsIn(ped, false)
-		local posv = GetEntityCoords(veh)
+		local pos = GetEntityCoords(veh)
 		local height = GetEntityHeightAboveGround(veh)
-		if not HasModelLoaded(model) then
-			RequestModel(model)
-			while not HasModelLoaded(model) do
+		SetFocusArea(pos, 0, 0, 0)
+		if not HasWeaponAssetLoaded(GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET")) then
+			RequestWeaponAsset(GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET"), 31, 0)
+			while not HasWeaponAssetLoaded(GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET")) do
 				Citizen.Wait(0)
 			end
 		end
-		SetFocusArea(pos, 0, 0, 0)
-		local ent = CreateObject(model, posv.x, posv.y, posv.z + 5 - height, true, true, true)
-		local pos = GetEntityCoords(ent, false)
-		ActivatePhysics(ent)
-		SetEntityVelocity(ent, 0, 0, -500.0)
-		AddExplosion(pos.x, pos.y, pos.z, 29, 20.0, true, false, false)
-		--IF THE ABOVE MAKES YOUR MAP BECOME GTA SA; USE THE BELOW:
-		--AddExplosion(pos.x, pos.y, pos.z, 9, 20.0, true, false, false)
-		DeleteObject(ent)
+		local offset = GetObjectOffsetFromCoords(pos.x,pos.y,pos.z,heading,0,0,0)
+		RequestCollisionAtCoord(offset)
+		offset = GetObjectOffsetFromCoords(pos.x,pos.y,pos.z,heading,0,0,0)
+		ShootSingleBulletBetweenCoords(offset+vector3(0,0,5), offset, 5000, 0, GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET"), GetPlayerPed(-1), 1, 0, f(9000))
+		offset = GetObjectOffsetFromCoords(pos.x,pos.y,pos.z,heading,f(-3),0,0)
+		ShootSingleBulletBetweenCoords(offset+vector3(0,0,5), offset, 5000, 0, GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET"), GetPlayerPed(-1), 1, 0, f(9000))
+		offset = GetObjectOffsetFromCoords(pos.x,pos.y,pos.z,heading,f(3),0,0)
+		ShootSingleBulletBetweenCoords(offset+vector3(0,0,5), offset, 5000, 0, GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET"), GetPlayerPed(-1), 1, 0, f(9000))
+		offset = GetObjectOffsetFromCoords(pos.x,pos.y,pos.z,heading,0,f(-3),0)
+		ShootSingleBulletBetweenCoords(offset+vector3(0,0,5), offset, 5000, 0, GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET"), GetPlayerPed(-1), 1, 0, f(9000))
+		offset = GetObjectOffsetFromCoords(pos.x,pos.y,pos.z,heading,0,f(3),0)
+		ShootSingleBulletBetweenCoords(offset+vector3(0,0,5), offset, 5000, 0, GetHashKey("VEHICLE_WEAPON_SPACE_ROCKET"), GetPlayerPed(-1), 1, 0, f(9000))
 	end)
 end
 
